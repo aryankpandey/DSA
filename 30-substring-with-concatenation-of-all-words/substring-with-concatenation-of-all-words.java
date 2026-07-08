@@ -8,11 +8,13 @@ class Solution {
 
         List<Integer> result = new ArrayList<>();
 
-        if (s == null || s.length() == 0 || words.length == 0)
+        if (s == null || s.length() == 0 || words.length == 0) {
             return result;
+        }
 
         int wordLength = words[0].length();
         int wordCount = words.length;
+        int windowLength = wordLength * wordCount;
 
         Map<String, Integer> target = new HashMap<>();
 
@@ -20,10 +22,11 @@ class Solution {
             target.put(word, target.getOrDefault(word, 0) + 1);
         }
 
+        // Try every possible starting offset
         for (int offset = 0; offset < wordLength; offset++) {
 
             int left = offset;
-            int matched = 0;
+            int count = 0;
 
             Map<String, Integer> window = new HashMap<>();
 
@@ -38,7 +41,7 @@ class Solution {
                     window.put(word,
                             window.getOrDefault(word, 0) + 1);
 
-                    matched++;
+                    count++;
 
                     while (window.get(word) > target.get(word)) {
 
@@ -49,10 +52,10 @@ class Solution {
                                 window.get(leftWord) - 1);
 
                         left += wordLength;
-                        matched--;
+                        count--;
                     }
 
-                    if (matched == wordCount) {
+                    if (count == wordCount) {
 
                         result.add(left);
 
@@ -63,13 +66,13 @@ class Solution {
                                 window.get(leftWord) - 1);
 
                         left += wordLength;
-                        matched--;
+                        count--;
                     }
 
                 } else {
 
                     window.clear();
-                    matched = 0;
+                    count = 0;
                     left = right + wordLength;
                 }
             }
